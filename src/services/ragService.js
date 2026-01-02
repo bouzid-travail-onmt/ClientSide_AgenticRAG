@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.0.102:8000/api/public";
+const BASE_URL = "http://localhost:8000/api/public";
 
 /**
  * Envoie une question au backend et reçoit la réponse en streaming (chunk par chunk)

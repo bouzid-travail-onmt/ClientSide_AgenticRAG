@@ -1,58 +1,48 @@
 // src/services/DataPreprocessingService.js
 import apiAdmin from "./apiAdmin";
+import { getSseToken } from "./SseTokenService";
 
 const API_BASE_EXCELS = "/preprocessingexcels";
 const API_BASE_REPORTS = "/preprocessingreports";
 
-/**
- * Lance le preprocessing SSE pour les fichiers Excel
- * @returns {Promise<EventSource>} EventSource pour écouter les logs en temps réel
- */
-export const startPreprocessingExcels = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      // On utilise la même base URL que apiAdmin
-      const eventSource = new EventSource(apiAdmin.defaults.baseURL + API_BASE_EXCELS);
+export const startPreprocessingExcels = async () => {
+  const sseToken = await getSseToken();
 
-      eventSource.onopen = () => {
-        console.log("🚀 SSE Excel connecté");
-        resolve(eventSource);
-      };
+  const url =
+    `${apiAdmin.defaults.baseURL}${API_BASE_EXCELS}` +
+    `?sse_token=${encodeURIComponent(sseToken)}`;
 
-      eventSource.onerror = (err) => {
-        console.error("❌ Erreur SSE Excel :", err);
-        eventSource.close();
-        reject(err);
-      };
-    } catch (err) {
-      console.error("❌ Impossible de lancer SSE Excel :", err);
-      reject(err);
-    }
-  });
+  const eventSource = new EventSource(url);
+
+  eventSource.onopen = () => {
+    console.log("🚀 SSE Excel sécurisé connecté");
+  };
+
+  eventSource.onerror = (err) => {
+    console.error("❌ Erreur SSE Excel :", err);
+    eventSource.close();
+  };
+
+  return eventSource;
 };
 
-/**
- * Lance le preprocessing SSE pour les rapports PDF
- * @returns {Promise<EventSource>} EventSource pour écouter les logs en temps réel
- */
-export const startPreprocessingReports = () => {
-  return new Promise((resolve, reject) => {
-    try {
-      const eventSource = new EventSource(apiAdmin.defaults.baseURL + API_BASE_REPORTS);
+export const startPreprocessingReports = async () => {
+  const sseToken = await getSseToken();
 
-      eventSource.onopen = () => {
-        console.log("🚀 SSE Reports connecté");
-        resolve(eventSource);
-      };
+  const url =
+    `${apiAdmin.defaults.baseURL}${API_BASE_REPORTS}` +
+    `?sse_token=${encodeURIComponent(sseToken)}`;
 
-      eventSource.onerror = (err) => {
-        console.error("❌ Erreur SSE Reports :", err);
-        eventSource.close();
-        reject(err);
-      };
-    } catch (err) {
-      console.error("❌ Impossible de lancer SSE Reports :", err);
-      reject(err);
-    }
-  });
+  const eventSource = new EventSource(url);
+
+  eventSource.onopen = () => {
+    console.log("🚀 SSE Reports sécurisé connecté");
+  };
+
+  eventSource.onerror = (err) => {
+    console.error("❌ Erreur SSE Reports :", err);
+    eventSource.close();
+  };
+
+  return eventSource;
 };

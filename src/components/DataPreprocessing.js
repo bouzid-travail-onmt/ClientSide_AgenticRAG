@@ -58,7 +58,7 @@ export default function DataPreprocessing({ onClose }) {
     setProcessing(true);
     setToast("");
     setLogs(type)(["🚀 Lancement du preprocessing..."]);
-    setShowLogs(true); // forcer affichage logs
+    setShowLogs(true);
 
     try {
       const sse =
@@ -72,22 +72,21 @@ export default function DataPreprocessing({ onClose }) {
 
       sse.onmessage = (event) => {
         const msg = event.data;
+        const cleanMsg = msg.trim();
 
-        // ✅ Messages finaux pour Reports et Excel
-        // Messages finaux pour Reports et Excel
-if (
-  (type === "reports" && msg === "✅ Pipeline complet terminé.") ||
-  (type === "excel" && msg.startsWith("🏁 Fin du pipeline Excel (prétraitement + indexation terminés)"))
-) {
-  setProcessing(false);
-  setToast("La mise à jour des données a été bien faite avec succès !");
-  setTimeout(() => setToast(""), 5000);
+        // ✅ Messages finaux
+        if (
+          (type === "reports" && cleanMsg.includes("Pipeline complet terminé")) ||
+          (type === "excel" && cleanMsg.includes("Fin du pipeline Excel"))
+        ) {
+          setProcessing(false);
+          setToast("La mise à jour des données a été bien faite avec succès !");
+          setTimeout(() => setToast(""), 5000);
 
-  // 🔹 Fermer SSE pour arrêter tout flux
-  if (sse) sse.close();
-  return;
-}
-
+          // 🔹 Fermer SSE
+          if (sse) sse.close();
+          return;
+        }
 
         // Progression FAISS → remplacer dernière ligne
         if (msg.includes("Construction FAISS en cours")) {
@@ -100,7 +99,6 @@ if (
           setLogs(type)((prev) => [...prev, msg]);
         }
       };
-
     } catch (err) {
       console.error("❌ Erreur lancement preprocessing :", err);
       setLogs(type)((prev) => [...prev, "❌ Impossible de lancer le preprocessing."]);
@@ -120,7 +118,6 @@ if (
 
   return (
     <div className="dataprep-overlay">
-      {/* 🔹 Overlay semi-transparent pour bloquer l'écran sauf les logs */}
       {processing && <div className="blocking-overlay-logs"></div>}
 
       <div className="dataprep-panel">
@@ -131,10 +128,8 @@ if (
           </button>
         </div>
 
-        {/* 🆕 Toast animé */}
         {toast && <div className="toast">✅ {toast}</div>}
 
-        {/* Boutons */}
         <div className="dataprep-main-buttons">
           <button
             className={`big-btn ${activeSection === "rapports" ? "active" : ""}`}

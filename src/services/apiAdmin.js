@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const apiAdmin = axios.create({
-  baseURL: "http://192.168.0.102:8000/api/admin",
+  baseURL: "http://localhost:8000/api/admin",
 });
 
 apiAdmin.interceptors.request.use((config) => {

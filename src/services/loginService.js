@@ -1,7 +1,7 @@
 // src/services/loginService.js
 import axios from "axios";
 
-const API_BASE_URL = "http://192.168.0.102:8000/api/auth"; // ✅ Base de ton backend
+const API_BASE_URL = "http://localhost:8000/api/auth"; // ✅ Base de ton backend
 
 // 🔹 Fonction de connexion utilisateur
 export async function login(username, password) {

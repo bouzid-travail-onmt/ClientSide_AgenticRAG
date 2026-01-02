@@ -6,7 +6,7 @@ const API_BASE_FILES = "/files";
 const API_BASE_FILES_RECENT = "/files/recent";
 const API_BASE_INDICATORS_PRIVATE = "/indicators";
 const API_BASE_INDICATORS_PUBLIC =
-  "http://192.168.0.102:8000/api/public/indicators";
+  "http://localhost:8000/api/public/indicators";
 const API_BASE_ES = "/es";
 /* ================= FILES (ADMIN) ================= */
 export const fetchFiles = async (type) => {
